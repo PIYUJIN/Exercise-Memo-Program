@@ -32,6 +32,7 @@ class Exercise {
         while (true) {
             // 프로그램 상태에 따른 분기
             when (programState) {
+                // read file data
                 ProgramState.PROGRAM_STATE_READ_FILE -> {
                     try {
                         readObjectStream()
@@ -41,13 +42,14 @@ class Exercise {
                     }
                     programState = ProgramState.PROGRAM_STATE_INPUT_MENU_NUMBER
                 }
+
+                // input menu number
                 ProgramState.PROGRAM_STATE_INPUT_MENU_NUMBER -> {
                     try {
                         inputMenuNumber()
                     } catch(e: Exception) {
                         scan.nextLine()
                         println("잘못된 정보입니다. 숫자로 다시 입력해주세요.")
-//                        programState = ProgramState.PROGRAM_STATE_INPUT_MENU_NUMBER
                         continue
                     }
 
@@ -56,11 +58,16 @@ class Exercise {
                         continue
                     }
 
+                    // 메뉴 1번을 선택한 경우
                     if (inputNumber == 1) {
                         programState = ProgramState.PROGRAM_STATE_INPUT_EXERCISE_INFO
-                    } else if (inputNumber == 2) {
+                    }
+                    // 메뉴 2번을 선택한 경우
+                    else if (inputNumber == 2) {
                         programState = ProgramState.PROGRAM_STATE_PRINT_EXERCISE_INFO
-                    } else if (inputNumber == 3) {
+                    }
+                    // 메뉴 3번을 선택한 경우
+                    else if (inputNumber == 3) {
                         println("프로그램이 종료되었습니다.")
                         programState = ProgramState.PROGRAM_SATAE_WRITE_FILE
                     }
@@ -69,16 +76,19 @@ class Exercise {
                     }
                 }
 
+                // menu 1 : 운동 기록
                 ProgramState.PROGRAM_STATE_INPUT_EXERCISE_INFO -> {
                     inputExerciseInfo()
                     programState = ProgramState.PROGRAM_STATE_INPUT_MENU_NUMBER
                 }
 
+                // menu 2 : 날짜별 운동 기록 출력
                 ProgramState.PROGRAM_STATE_PRINT_EXERCISE_INFO -> {
                     selectDate()
                     programState = ProgramState.PROGRAM_STATE_INPUT_MENU_NUMBER
                 }
 
+                // 끝날때 운동 기록 file에 저장
                 ProgramState.PROGRAM_SATAE_WRITE_FILE -> {
                     saveObjectStream()
                     break
@@ -88,6 +98,7 @@ class Exercise {
 
     }
 
+    // write data
     fun saveObjectStream() {
         val fos = FileOutputStream("exercise.txt")
         val oos = ObjectOutputStream(fos)
@@ -101,6 +112,7 @@ class Exercise {
         fos.close()
     }
 
+    // read data
     fun readObjectStream() {
         val fis = FileInputStream("exercise.txt")
         val ois = ObjectInputStream(fis)
@@ -116,6 +128,7 @@ class Exercise {
         fis.close()
     }
 
+    // menu 출력 및 입력 번호 읽어오기
     fun inputMenuNumber() {
                 println()
                 println("메뉴를 선택해주세요.")
@@ -126,6 +139,7 @@ class Exercise {
                 inputNumber = scan.nextInt()
     }
 
+    // menu 1 : 운동 기록하기
     fun inputExerciseInfo() {
         var type = " "
         var num = 0L
@@ -145,6 +159,7 @@ class Exercise {
 
 //        memoList.add(Memo(now, type, num, setNum))
 //        dateList.add(now)
+            // 객체 생성 후 리스트에 저장
             memoList.add(Memo(localDate, type, num, setNum))
             dateList.add(localDate)
         } catch (e: java.lang.Exception) {
@@ -153,15 +168,20 @@ class Exercise {
         }
     }
 
+    // menu 2 : 날짜 출력 후 날짜 입력받아 해당 날짜 운동 기록 출력하기
     fun selectDate() {
+        // 날짜 데이터 시간 순서대로 정렬
         var sortedDateList = dateList.sorted()
         var n = 1
         println()
+
+        // 날짜 메뉴 출력
         for (i in sortedDateList) {
             println("$n. $i")
             n++
         }
 
+        // 날짜 선택
         try {
             println()
             print("날짜를 선택해주세요. (0.이전) : ")
@@ -175,6 +195,7 @@ class Exercise {
                 return
             }
 
+            // 날짜별 운동 기록 출력
             for (i in memoList) {
                 var date = i.date
                 if(date==sortedDateList.elementAt(inputNum-1)) {
@@ -194,10 +215,12 @@ class Exercise {
 
 }
 
+// 운동 기록 데이터
 data class Memo (var date: LocalDate, var type:String, var num:Long, var set:Long) : Serializable {
 
 }
 
+// 프로그램 state 관리
 enum class ProgramState {
     PROGRAM_STATE_INPUT_MENU_NUMBER, PROGRAM_STATE_INPUT_EXERCISE_INFO, PROGRAM_STATE_PRINT_EXERCISE_INFO, PROGRAM_STATE_READ_FILE, PROGRAM_SATAE_WRITE_FILE
 }
