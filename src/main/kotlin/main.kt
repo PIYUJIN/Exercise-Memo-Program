@@ -1,8 +1,15 @@
+import java.io.FileInputStream
+import java.io.FileOutputStream
+import java.io.ObjectInputStream
+import java.io.ObjectOutputStream
+import java.io.Serializable
 import java.lang.Exception
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.io.encoding.encodingWith
+import kotlin.text.Charsets.UTF_8
 
 fun main(){
     val ex = Exercise()
@@ -19,12 +26,21 @@ class Exercise {
     var dateList = mutableSetOf<LocalDate>()
 
     // 초기 상태를 메뉴 정보를 입력받는 상태로 설정한다.
-    var programState = ProgramState.PROGRAM_STATE_INPUT_MENU_NUMBER
+    var programState = ProgramState.PROGRAM_STATE_READ_FILE
 
     fun running() {
         while (true) {
             // 프로그램 상태에 따른 분기
             when (programState) {
+                ProgramState.PROGRAM_STATE_READ_FILE -> {
+                    try {
+                        readObjectStream()
+                    }
+                    catch(e: Exception) {
+                        print("")
+                    }
+                    programState = ProgramState.PROGRAM_STATE_INPUT_MENU_NUMBER
+                }
                 ProgramState.PROGRAM_STATE_INPUT_MENU_NUMBER -> {
                     try {
                         inputMenuNumber()
@@ -46,7 +62,7 @@ class Exercise {
                         programState = ProgramState.PROGRAM_STATE_PRINT_EXERCISE_INFO
                     } else if (inputNumber == 3) {
                         println("프로그램이 종료되었습니다.")
-                        break
+                        programState = ProgramState.PROGRAM_SATAE_WRITE_FILE
                     }
                     else {
                         break
@@ -62,13 +78,45 @@ class Exercise {
                     selectDate()
                     programState = ProgramState.PROGRAM_STATE_INPUT_MENU_NUMBER
                 }
+
+                ProgramState.PROGRAM_SATAE_WRITE_FILE -> {
+                    saveObjectStream()
+                    break
+                }
             }
         }
 
     }
 
+    fun saveObjectStream() {
+        val fos = FileOutputStream("exercise.txt")
+        val oos = ObjectOutputStream(fos)
+
+        for (i in memoList) {
+            oos.writeObject(i)
+        }
+
+        oos.flush()
+        oos.close()
+        fos.close()
+    }
+
+    fun readObjectStream() {
+        val fis = FileInputStream("exercise.txt")
+        val ois = ObjectInputStream(fis)
+        for (i in 0 until fis.available()) {
+            memoList.add(ois.readObject() as Memo)
+            for (i in memoList) {
+                dateList.add(i.date)
+            }
+        }
+
+
+        ois.close()
+        fis.close()
+    }
+
     fun inputMenuNumber() {
-//            try {
                 println()
                 println("메뉴를 선택해주세요.")
                 println("1. 오늘의 운동 기록")
@@ -76,10 +124,6 @@ class Exercise {
                 println("3. 종료")
                 print("번호 입력 : ")
                 inputNumber = scan.nextInt()
-//            } catch (e: Exception) {
-//                println("잘못 입력하였습니다. 다시 입력해주세요.")
-//                programState = ProgramState.PROGRAM_STATE_INPUT_MENU_NUMBER
-//            }
     }
 
     fun inputExerciseInfo() {
@@ -118,6 +162,7 @@ class Exercise {
             n++
         }
 
+        try {
             println()
             print("날짜를 선택해주세요. (0.이전) : ")
             var inputNum = scan.nextInt()
@@ -140,16 +185,21 @@ class Exercise {
                 }
             }
             programState = ProgramState.PROGRAM_STATE_INPUT_MENU_NUMBER
+            } catch (e:Exception) {
+                scan.nextLine()
+                println("잘못된 정보입니다. 숫자로 다시 입력해주세요.")
+                return
+            }
     }
 
 }
 
-data class Memo (var date: LocalDate, var type:String, var num:Long, var set:Long) {
+data class Memo (var date: LocalDate, var type:String, var num:Long, var set:Long) : Serializable {
 
 }
 
 enum class ProgramState {
-    PROGRAM_STATE_INPUT_MENU_NUMBER, PROGRAM_STATE_INPUT_EXERCISE_INFO, PROGRAM_STATE_PRINT_EXERCISE_INFO
+    PROGRAM_STATE_INPUT_MENU_NUMBER, PROGRAM_STATE_INPUT_EXERCISE_INFO, PROGRAM_STATE_PRINT_EXERCISE_INFO, PROGRAM_STATE_READ_FILE, PROGRAM_SATAE_WRITE_FILE
 }
 
 
