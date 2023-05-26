@@ -9,6 +9,7 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.io.encoding.encodingWith
+import kotlin.system.exitProcess
 import kotlin.text.Charsets.UTF_8
 
 fun main(){
@@ -25,7 +26,7 @@ class Exercise {
     var memoList = ArrayList<Memo>()
     var dateList = mutableSetOf<LocalDate>()
 
-    // 초기 상태를 메뉴 정보를 입력받는 상태로 설정한다.
+    // 초기 상태를 파일 읽어오는 상태로 설정한다.
     var programState = ProgramState.PROGRAM_STATE_READ_FILE
 
     fun running() {
@@ -69,7 +70,10 @@ class Exercise {
                 // 끝날때 운동 기록 file에 저장
                 ProgramState.PROGRAM_SATAE_WRITE_FILE -> {
                     saveObjectStream()
-                    break
+                    // 프로그램을 강제 종료시킨다
+                    // 0 : 정상 종료를 나타내는 코드
+                    exitProcess(0)
+//                    break
                 }
             }
         }
