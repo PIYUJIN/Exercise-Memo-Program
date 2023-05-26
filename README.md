@@ -49,3 +49,21 @@ This is Exercise Memo Program that can record exercise information.
 - PROGRAM_SATAE_WRITE_FILE
   - 실행 method : _**saveObjectStream()**_
   - 실행 후 종료
+ 
+
+## 실행 영상
+
+
+- menu 1
+
+![화면-기록-2023-05-26-오후-4 42 14_2](https://github.com/PIYUJIN/Exercise-Memo-Program/assets/86800087/497c68ff-47bf-455e-8afe-4b1c9a265cff)
+
+- menu 2
+
+![화면-기록-2023-05-26-오후-4 42 57](https://github.com/PIYUJIN/Exercise-Memo-Program/assets/86800087/4c95861c-eafe-4521-85d1-266c50d941ba)
+
+- menu 3
+
+![화면-기록-2023-05-26-오후-4 43 54](https://github.com/PIYUJIN/Exercise-Memo-Program/assets/86800087/36872fde-5299-49c4-833c-251822d82479)
+
+
