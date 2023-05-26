@@ -205,6 +205,8 @@ class Exercise {
                 var date = i.date
                 if(date==sortedDateList.elementAt(inputNum-1)) {
                     println()
+                    println("${date}의 운동 기록입니다.")
+                    println()
                     println("운동 종류 : ${i.type}")
                     println("횟수 : ${i.num}")
                     println("세트 : ${i.set}")
