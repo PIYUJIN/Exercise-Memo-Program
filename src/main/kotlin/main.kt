@@ -70,10 +70,10 @@ class Exercise {
                 // 끝날때 운동 기록 file에 저장
                 ProgramState.PROGRAM_SATAE_WRITE_FILE -> {
                     saveObjectStream()
-                    // 프로그램을 강제 종료시킨다
-                    // 0 : 정상 종료를 나타내는 코드
-                    exitProcess(0)
-//                    break
+//                    // 프로그램을 강제 종료시킨다
+//                    // 0 : 정상 종료를 나타내는 코드
+//                    exitProcess(0)
+                    break
                 }
             }
         }
@@ -200,12 +200,13 @@ class Exercise {
                 return
             }
 
+            println()
+            println("${sortedDateList.elementAt(inputNum-1)}의 운동 기록입니다.")
+
             // 날짜별 운동 기록 출력
             for (i in memoList) {
                 var date = i.date
                 if(date==sortedDateList.elementAt(inputNum-1)) {
-                    println()
-                    println("${date}의 운동 기록입니다.")
                     println()
                     println("운동 종류 : ${i.type}")
                     println("횟수 : ${i.num}")
