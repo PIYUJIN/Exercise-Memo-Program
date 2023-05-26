@@ -47,32 +47,10 @@ class Exercise {
                 ProgramState.PROGRAM_STATE_INPUT_MENU_NUMBER -> {
                     try {
                         inputMenuNumber()
-                    } catch(e: Exception) {
+                    } catch (e: Exception) {
                         scan.nextLine()
                         println("잘못된 정보입니다. 숫자로 다시 입력해주세요.")
                         continue
-                    }
-
-                    if (inputNumber !in 1..3) {
-                        println("잘못된 번호입니다. 1,2,3번의 번호 중 입력해주세요.")
-                        continue
-                    }
-
-                    // 메뉴 1번을 선택한 경우
-                    if (inputNumber == 1) {
-                        programState = ProgramState.PROGRAM_STATE_INPUT_EXERCISE_INFO
-                    }
-                    // 메뉴 2번을 선택한 경우
-                    else if (inputNumber == 2) {
-                        programState = ProgramState.PROGRAM_STATE_PRINT_EXERCISE_INFO
-                    }
-                    // 메뉴 3번을 선택한 경우
-                    else if (inputNumber == 3) {
-                        println("프로그램이 종료되었습니다.")
-                        programState = ProgramState.PROGRAM_SATAE_WRITE_FILE
-                    }
-                    else {
-                        break
                     }
                 }
 
@@ -130,13 +108,32 @@ class Exercise {
 
     // menu 출력 및 입력 번호 읽어오기
     fun inputMenuNumber() {
-                println()
-                println("메뉴를 선택해주세요.")
-                println("1. 오늘의 운동 기록")
-                println("2. 날짜별 운동 기록 보기")
-                println("3. 종료")
-                print("번호 입력 : ")
-                inputNumber = scan.nextInt()
+        println()
+        println("메뉴를 선택해주세요.")
+        println("1. 오늘의 운동 기록")
+        println("2. 날짜별 운동 기록 보기")
+        println("3. 종료")
+        print("번호 입력 : ")
+        inputNumber = scan.nextInt()
+
+        if (inputNumber !in 1..3) {
+            println("잘못된 번호입니다. 1,2,3번의 번호 중 입력해주세요.")
+            programState = ProgramState.PROGRAM_STATE_INPUT_MENU_NUMBER
+        }
+
+        // 메뉴 1번을 선택한 경우
+        if (inputNumber == 1) {
+            programState = ProgramState.PROGRAM_STATE_INPUT_EXERCISE_INFO
+        }
+        // 메뉴 2번을 선택한 경우
+        else if (inputNumber == 2) {
+            programState = ProgramState.PROGRAM_STATE_PRINT_EXERCISE_INFO
+        }
+        // 메뉴 3번을 선택한 경우
+        else if (inputNumber == 3) {
+            println("프로그램이 종료되었습니다.")
+            programState = ProgramState.PROGRAM_SATAE_WRITE_FILE
+        }
     }
 
     // menu 1 : 운동 기록하기
@@ -147,9 +144,10 @@ class Exercise {
         var date = " "
         var localDate : LocalDate = now
         try {
-            print("날짜 : ")
-            date = scan.next()
-            localDate = LocalDate.parse(date, DateTimeFormatter.ISO_DATE)
+            //날짜를 입력받아 사용하는 경우 날짜 입력받기
+//            print("날짜 : ")
+//            date = scan.next()
+//            localDate = LocalDate.parse(date, DateTimeFormatter.ISO_DATE)
             print("운동 종류 : ")
             type = scan.next()
             print("횟수 : ")
@@ -157,11 +155,14 @@ class Exercise {
             print("세트 : ")
             setNum = scan.nextLong()
 
-//        memoList.add(Memo(now, type, num, setNum))
-//        dateList.add(now)
             // 객체 생성 후 리스트에 저장
-            memoList.add(Memo(localDate, type, num, setNum))
-            dateList.add(localDate)
+            // 현재 날짜로 저장
+            memoList.add(Memo(now, type, num, setNum))
+            dateList.add(now)
+
+            // 날짜 입력받은 후 해당 날짜로 저장
+//            memoList.add(Memo(localDate, type, num, setNum))
+//            dateList.add(localDate)
         } catch (e: java.lang.Exception) {
             scan.nextLine()
             println("잘못된 정보입니다.")
